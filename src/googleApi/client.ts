@@ -45,7 +45,6 @@ export const updateRange = async (client: any, sheetRange: GoogleSheetRange, upd
         valueInputOption: 'USER_ENTERED',
         resource: { values: update }
     }
-    const gsapi = google.sheets({ version: 'v4', auth: client })
 
     try {
         const res = await client.spreadsheets.values.update(updateOptions)
