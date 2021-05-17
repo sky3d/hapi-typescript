@@ -12,7 +12,7 @@ export const createClient = async (config: GoogleApiCredentials): Promise<any> =
     try {
         const tokens = await auth.authorize()
         console.log('authorization tokens successfully retrieved')
-        return auth
+        return google.sheets({ version: 'v4', auth })
     } catch (err) {
         console.log('auth error:', err)
     }
@@ -21,7 +21,6 @@ export const createClient = async (config: GoogleApiCredentials): Promise<any> =
 
 export const readRange = async (client: any, sheetRange: GoogleSheetRange) => {
     const { spreadsheetId, range } = sheetRange
-    const gsapi = google.sheets({ version: 'v4', auth: client })
 
     const options = {
         spreadsheetId,
@@ -29,7 +28,7 @@ export const readRange = async (client: any, sheetRange: GoogleSheetRange) => {
     }
 
     try {
-        const data = await gsapi.spreadsheets.values.get(options)
+        const data = await client.spreadsheets.values.get(options)
         return data.data.values
     } catch (err) {
         console.log('reading spreadsheet data error', err)
@@ -49,7 +48,7 @@ export const updateRange = async (client: any, sheetRange: GoogleSheetRange, upd
     const gsapi = google.sheets({ version: 'v4', auth: client })
 
     try {
-        const res = await gsapi.spreadsheets.values.update(updateOptions)
+        const res = await client.spreadsheets.values.update(updateOptions)
         return res.data
     } catch (err) {
         console.log('update spreadsheet data error', err)
